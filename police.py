@@ -5,19 +5,22 @@ import matplotlib.pyplot as plt
 import cryptography
 
 #DB connection
+
 def new_connection():
     try:
         mydb = pymysql.connect(
             host="localhost",
             user="root",
-            password="",
+            password="Mathi@1903",
             database="policedb"
         )
         return mydb
     except pymysql.MySQLError as e:
         st.error(f"Connection Error: {e}")
         return None
+       
 #fetch data
+
 def fetch_data(query):
     conn=new_connection()
     if conn:
@@ -39,14 +42,18 @@ print("All packages loaded successfully!")
 
 st.set_page_config(page_title="🚓 SecureCheck: Police Post Dashboard", layout="wide")
 st.title("🚓 SecureCheck: Police Post Dashboard")
+
 #sidebar
+
 menu = st.sidebar.selectbox(
     "Navigate",
     ["Home", "View logs","Add Logs"]
 )
 
 #Home page
-    #Title and description
+
+#Title and description
+
 if menu == "Home":
     st.subheader("Welcome to SecureCheck ✅")
     st.markdown("""
@@ -58,7 +65,9 @@ if menu == "Home":
     - 📍 Visualize trends over time and location
     """)
     st.success("Let's make policing smarter and safer! 🚓")
-        #metics
+
+#metics
+
     st.header("📊Key Metrics")
     query="select * from policedb.logs"
     data=fetch_data(query)
@@ -79,14 +88,17 @@ if menu == "Home":
     with col4:
         drug_stop = data[data["drugs_related_stop"] == 1].shape[0]
         st.metric("💊 Drug Related Stops", drug_stop)
-    #display logs
+
+#display logs
+
     st.header("📋Police Logs Overview")
     query="select * from policedb.logs"
     data=fetch_data(query)
     st.dataframe(data,use_container_width=True)
     st.markdown("---")  
     
-    #description 
+#description 
+
     st.subheader("📝 Description")
     st.markdown("""
     The table above showcases daily police log records, including incident types, dates, and locations.
@@ -98,8 +110,10 @@ if menu == "Home":
 
     tab = st.tabs(['Stops By Violations', 'Driver Gender Distribution'])
 
+ # SQL Query to fetch violation and its counts
+
     with tab[0]:
-    # SQL Query to fetch violation and its counts
+   
         query = "select violation, count(violation) as counts from policedb.logs group by violation"
         data = fetch_data(query)
         st.dataframe(data)
@@ -113,8 +127,10 @@ if menu == "Home":
         ax.tick_params(axis='y', labelsize=4)
         st.pyplot(fig)
 
+ # SQL Query to fetch Gender of Driver and its counts
+
     with tab[1]:
-    # SQL Query to fetch Gender of Driver and its counts
+   
         query = "select driver_gender, count(*) as count from policedb.logs group by driver_gender"
         data = fetch_data(query)
         st.dataframe(data)
@@ -131,7 +147,11 @@ if menu == "Home":
     st.markdown("❤️Built for Law enforcement by Securecheck")
 
 #View Logs Page
+
 elif menu=="View logs":
+
+#view vehicle logs with filters
+
     st.subheader("📋View vechicle logs with filters")
 
     st.write("Use the filters to narrow down the logs")
@@ -164,7 +184,8 @@ elif menu=="View logs":
     
     st.markdown("---")  
     
-    
+#view log insights
+
     st.subheader("🧠 View logs insights")
 
     analysis_option = st.selectbox(
@@ -363,7 +384,12 @@ elif menu=="View logs":
 
     st.markdown("---") 
     st.markdown("❤️Built for Law enforcement by Securecheck")
+#Add logs page
+
 elif menu=="Add Logs":
+
+#use natural filters to analyse stops and trends
+
     st.subheader("🔍 Use natural language to filter past police stops and analyze trends.")
     st.markdown("📝 Fill in the details below to log a police stop and get a predicted outcome & violation.")
 
@@ -388,7 +414,7 @@ elif menu=="Add Logs":
         submitted = st.form_submit_button("✅ Predict Stop Outcome & Violation")
 
     if submitted:
-    # convert stop_time to string for comparison
+# convert stop_time to string for comparison
         stop_time_str = stop_time.strftime('%H:%M:%S')  
 
         filtered_data = data[
@@ -407,6 +433,8 @@ elif menu=="Add Logs":
         drug_text = "was drug related" if int(drugs_related_stop) else "was not drug related"
 
         st.markdown("---")
+
+#predicted summary
         st.subheader("🚓 **Prediction Summary**")
 
         st.markdown(f"""
@@ -417,19 +445,3 @@ elif menu=="Add Logs":
         st.markdown("---")
     st.markdown("---")
     st.markdown("❤️Built for Law enforcement by Securecheck")
-
-    
-
-
-
-        
-
-
-   
-    
-
-
-
-
-
-
