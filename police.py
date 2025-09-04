@@ -10,7 +10,7 @@ def new_connection():
         mydb = pymysql.connect(
             host="localhost",
             user="root",
-            password="Mathi@1903",
+            password="",
             database="policedb"
         )
         return mydb
@@ -427,6 +427,7 @@ elif menu=="Add Logs":
 
    
     
+
 
 
 
